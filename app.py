@@ -1,14 +1,14 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="MTI Swimlane Dashboard", layout="wide")
+st.set_page_config(page_title="MTI Vertical Pillars", layout="wide")
 
-st.markdown("### 📋 Full MTI Pathway – Infection Sciences Model")
+st.markdown("### 📋 Full MTI Pathway – Vertical Pillar Model")
 
-# Using 'graph LR' for the columns, but 'direction TB' for the content inside columns
+# Using 'graph LR' for the overall layout, but strict 'subgraph' verticality
 mermaid_code = """
-graph LR
-    subgraph "1. Strategic & <br/> Programme Design"
+flowchart LR
+    subgraph P1 ["1. Strategic & <br/> Programme Design"]
         direction TB
         S1([Start]) --> S2[Strategic Intent]
         S2 --> S3[Programme Design]
@@ -18,35 +18,35 @@ graph LR
         S3c --> S4[Clinical Director]
     end
 
-    subgraph "2. Governance & <br/> Candidate Sourcing"
+    subgraph P2 ["2. Governance & <br/> Candidate Sourcing"]
         direction TB
         G1[Governance:<br/>Stakeholders] --> G2[/Trust Approval/]
         G2 --> G3[Sourcing:<br/>Partner / Sponsor]
     end
 
-    subgraph "3. Pre-Arrival & <br/> Induction"
+    subgraph P3 ["3. Pre-Arrival & <br/> Induction"]
         direction TB
-        P1[GMC Registration] --> P2[Visa Sponsorship]
-        P2 --> P3[Pre-arrival:<br/>Welcome Pack]
+        R1[GMC Registration] --> R2[Visa Sponsorship]
+        R2 --> R3[Pre-arrival:<br/>Welcome Pack]
     end
 
-    subgraph "4. Training & <br/> Monitoring"
+    subgraph P4 ["4. Training & <br/> Monitoring"]
         direction TB
         T1[Structured Training:<br/>Micro / Lab / MDT] --> T2[Regular Supervision:<br/>ES/CS Meetings]
         T2 --> T3{Decision Points}
     end
 
-    subgraph "5. Programme Exit & <br/> Improvement"
+    subgraph P5 ["5. Programme Exit & <br/> Improvement"]
         direction TB
         E1[Final Review] --> E2[Return / Career]
         E2 --> E3[Outcomes & Feedback]
         E3 --> E4([End])
     end
 
-    %% Connections between the vertical swimlanes
+    %% Bridges between the pillars
     S4 --> G1
-    G3 --> P1
-    P3 --> T1
+    G3 --> R1
+    R3 --> T1
     T3 --> E1
 
     %% Styling Classes for High-Fidelity Colors
@@ -56,14 +56,21 @@ graph LR
     
     %% Applying Classes
     class S1,E4 startEnd;
-    class S2,G1,G3,P3,T1,E1 headerNode;
-    class S3,S3a,S3b,S3c,S4,G2,P1,P2,T2,E2,E3 subNode;
+    class S2,G1,R1,T1,E1 headerNode;
+    class S3,S3a,S3b,S3c,S4,G2,R2,R3,T2,E2,E3 subNode;
+    
+    %% Coloring the subgraph headers
+    style P1 fill:#f8f9fa,stroke:#1a3a5f
+    style P2 fill:#ffffff,stroke:#1a3a5f
+    style P3 fill:#f8f9fa,stroke:#1a3a5f
+    style P4 fill:#ffffff,stroke:#1a3a5f
+    style P5 fill:#f8f9fa,stroke:#1a3a5f
 """
 
 def render_mermaid(code):
     html = f"""
-    <div style="display: flex; justify-content: center; width: 100%; padding: 10px;">
-        <div class="mermaid" style="min-width: 1400px; border: 1px solid #ddd; padding: 20px; border-radius: 10px; background: white;">
+    <div style="display: flex; justify-content: center; width: 100%;">
+        <div class="mermaid" style="min-width: 1400px; padding: 20px; background: white;">
             {code}
         </div>
     </div>
@@ -75,13 +82,9 @@ def render_mermaid(code):
             flowchart: {{ 
                 useMaxWidth: false, 
                 htmlLabels: true, 
-                curve: 'basis'
-            }},
-            themeVariables: {{
-                'primaryColor': '#ffffff',
-                'edgeLabelBackground':'#ffffff',
-                'tertiaryColor': '#f8f9fa',
-                'fontSize': '14px'
+                curve: 'stepAfter',
+                rankSpacing: 50,
+                nodeSpacing: 10
             }}
         }});
     </script>
