@@ -6,9 +6,10 @@ st.set_page_config(page_title="MTI Pathway Master", layout="wide")
 st.markdown("## 🏛️ MTI Pathway – Trust-Level Visual Flow")
 st.markdown("#### Infection Sciences Model")
 
-def render_pillar(code, height=950):
+def render_pillar(code, height=980):
+    # Changed background to #ffffff (Plain White) and added a subtle border
     html = f"""
-    <div style="background: #f0f7ff; border: 2px solid #005eb8; padding: 15px; border-radius: 10px; height: {height}px; overflow-y: auto;">
+    <div style="background: #ffffff; border: 1px solid #005eb8; padding: 15px; border-radius: 10px; height: {height}px; overflow-y: auto;">
         <div class="mermaid">
             {code}
         </div>
@@ -22,11 +23,11 @@ def render_pillar(code, height=950):
                 useMaxWidth: false, 
                 htmlLabels: true, 
                 curve: 'basis',
-                rankSpacing: 30,
+                rankSpacing: 35,
                 nodeSpacing: 10
             }},
             themeVariables: {{ 
-                'fontSize': '15px', 
+                'fontSize': '16px', 
                 'fontFamily': 'Arial',
                 'primaryColor': '#ffffff',
                 'lineColor': '#005eb8'
@@ -36,7 +37,7 @@ def render_pillar(code, height=950):
     """
     components.html(html, height=height + 20)
 
-# Styling definitions
+# NHS Styling: Navy Headers, White Sub-boxes
 styles = """
     classDef startEnd fill:#d4edda,stroke:#28a745,stroke-width:2px;
     classDef mainNode fill:#005eb8,color:#fff,font-weight:bold,stroke:#002f5c;
@@ -71,14 +72,14 @@ with row1[2]:
     render_pillar(f"""graph TD
     C1["Engage Stakeholders<br/>• Med Ed / HR / Finance"] --> C2["Royal College Route<br/>(e.g. RCPath)"]
     C2 --> C3[/"Trust Approval<br/>• Job plan validation<br/>• Induction capacity"/]
-    C3 --> C4["Post Approved for MTI"]
+    C3 --> C4["Post Approval for MTI Scheme"]
     {styles}
     class C1,C4 mainNode; class C2,C3 subNode;""")
 
 with row1[3]:
     st.markdown("**4. Candidate Pipeline**")
     render_pillar(f"""graph TD
-    D1["Identify Int. Partner<br/>(e.g. Sri Lanka)"] --> D2["Candidate EOI"]
+    D1["Identify International Partner<br/>(e.g. Sri Lanka)"] --> D2["Candidate EOI"]
     D2 --> D3["Shortlisting & Interview"]
     D3 --> D4["RC Sponsorship<br/>Confirmation"]
     {styles}
@@ -87,7 +88,7 @@ with row1[3]:
 with row1[4]:
     st.markdown("**5. Pre-Arrival**")
     render_pillar(f"""graph TD
-    E1["GMC Registration"] --> E2["Visa Sponsorship<br/>(Tier 5 – MTI route)"]
+    E1["GMC Registration Process"] --> E2["Visa Sponsorship<br/>(Tier 5 – MTI route)"]
     E2 --> E3["Pre-arrival Engagement"]
     E3 --> E4["• Welcome pack<br/>• Role expectations<br/>• Induction plan"]
     {styles}
@@ -102,15 +103,15 @@ with row2[0]:
     st.markdown("**6. Induction**")
     render_pillar(f"""graph TD
     F1["Trust Induction<br/>(HR + Mandatory)"] --> F2["Dept Induction<br/>• Lab systems<br/>• Clinical pathways"]
-    F2 --> F3["Supernumerary Period"]
-    F3 --> F4["Gradual Integration"]
+    F2 --> F3["Supernumerary Period / Shadowing"]
+    F3 --> F4["Gradual Clinical Integration"]
     {styles}
     class F1,F4 mainNode; class F2,F3 subNode;""")
 
 with row2[1]:
     st.markdown("**7. Training Delivery**")
     render_pillar(f"""graph TD
-    G1["Structured Training<br/>• Clinical Micro<br/>• Lab / MDT"] --> G2["Regular Supervision<br/>• ES/CS meetings<br/>• Portfolio reviews"]
+    G1["Structured Training Programme<br/>• Clinical microbiology<br/>• Lab / MDT"] --> G2["Regular Supervision<br/>• ES/CS meetings<br/>• Portfolio reviews"]
     G2 --> G3["Access to Teaching,<br/>QI & Leadership"]
     {styles}
     class G1 mainNode; class G2,G3 subNode;""")
@@ -119,23 +120,23 @@ with row2[2]:
     st.markdown("**8. Quality Assurance**")
     render_pillar(f"""graph TD
     H1["3 / 6 / 12 Month Reviews"] --> H2["Feedback Collection<br/>• Trainee / Supervisors"]
-    H2 --> H3{{"Address Issues Early<br/>• Workload / Support"}}
+    H2 --> H3{{"Address Issues Early<br/>• Workload / Support<br/>• Training gaps"}}
     {styles}
     class H1 mainNode; class H2 subNode; class H3 logicNode;""")
 
 with row2[3]:
     st.markdown("**9. Exit Planning**")
     render_pillar(f"""graph TD
-    I1["Final Review & Sign-off"] --> I2["Support Return Home<br/>(or Career Guidance)"]
-    I2 --> I3["Capture Outcomes<br/>& Feedback"]
+    I1["Final Review & Sign-off"] --> I2["Support Return to Home Country<br/>(or Career Guidance)"]
+    I2 --> I3["Capture Outcomes & Feedback"]
     {styles}
     class I1 mainNode; class I2,I3 subNode;""")
 
 with row2[4]:
-    st.markdown("**10. Improvement**")
+    st.markdown("**10. Improvement Loop**")
     render_pillar(f"""graph TD
     J1["Evaluate Programme"] --> J2["Refine Model"]
-    J2 --> J3["Expand MTI Capacity"]
+    J2 --> J3["Expand MTI Capacity<br/>(Future Cohorts)"]
     J3 --> J4([End])
     {styles}
     class J1,J3 mainNode; class J2 subNode; class J4 startEnd;""")
