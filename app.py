@@ -1,46 +1,53 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="MTI Pathway Landscape", layout="wide")
+st.set_page_config(page_title="MTI Swimlane Dashboard", layout="wide")
 
-st.markdown("### 📋 Full MTI Pathway – Trust-Level Visual Flow")
+st.markdown("### 📋 Full MTI Pathway – Infection Sciences Model")
 
-# Mermaid code using 'graph LR' with Subgraphs acting as Columns
+# Using 'graph LR' for the columns, but 'direction TB' for the content inside columns
 mermaid_code = """
 graph LR
     subgraph "1. Strategic & <br/> Programme Design"
+        direction TB
         S1([Start]) --> S2[Strategic Intent]
         S2 --> S3[Programme Design]
         S3 --> S3a[Role Description]
-        S3 --> S3b[Educational Objectives]
-        S3 --> S3c[Duration / Exposure]
+        S3a --> S3b[Educational Objectives]
+        S3b --> S3c[Duration / Exposure]
         S3c --> S4[Clinical Director]
     end
 
     subgraph "2. Governance & <br/> Candidate Sourcing"
-        S4 --> G1[Governance:<br/>Stakeholders]
-        G1 --> G2[/Trust Approval/]
+        direction TB
+        G1[Governance:<br/>Stakeholders] --> G2[/Trust Approval/]
         G2 --> G3[Sourcing:<br/>Partner / Sponsor]
     end
 
     subgraph "3. Pre-Arrival & <br/> Induction"
-        G3 --> P1[GMC Registration]
-        P1 --> P2[Visa Sponsorship]
+        direction TB
+        P1[GMC Registration] --> P2[Visa Sponsorship]
         P2 --> P3[Pre-arrival:<br/>Welcome Pack]
     end
 
     subgraph "4. Training & <br/> Monitoring"
-        P3 --> T1[Structured Training:<br/>Micro / Lab / MDT]
-        T1 --> T2[Regular Supervision:<br/>ES/CS Meetings]
+        direction TB
+        T1[Structured Training:<br/>Micro / Lab / MDT] --> T2[Regular Supervision:<br/>ES/CS Meetings]
         T2 --> T3{Decision Points}
     end
 
     subgraph "5. Programme Exit & <br/> Improvement"
-        T3 --> E1[Final Review]
-        E1 --> E2[Return / Career]
+        direction TB
+        E1[Final Review] --> E2[Return / Career]
         E2 --> E3[Outcomes & Feedback]
         E3 --> E4([End])
     end
+
+    %% Connections between the vertical swimlanes
+    S4 --> G1
+    G3 --> P1
+    P3 --> T1
+    T3 --> E1
 
     %% Styling Classes for High-Fidelity Colors
     classDef startEnd fill:#d4edda,stroke:#28a745,stroke-width:2px;
@@ -54,10 +61,9 @@ graph LR
 """
 
 def render_mermaid(code):
-    # Using a custom div with 'min-width' to ensure it fits in landscape without squishing
     html = f"""
-    <div id="graph-container" style="display: flex; justify-content: center; width: 100%; overflow-x: auto;">
-        <div class="mermaid" style="min-width: 1200px;">
+    <div style="display: flex; justify-content: center; width: 100%; padding: 10px;">
+        <div class="mermaid" style="min-width: 1400px; border: 1px solid #ddd; padding: 20px; border-radius: 10px; background: white;">
             {code}
         </div>
     </div>
@@ -69,20 +75,17 @@ def render_mermaid(code):
             flowchart: {{ 
                 useMaxWidth: false, 
                 htmlLabels: true, 
-                curve: 'linear',
-                rankSpacing: 40,
-                nodeSpacing: 20
+                curve: 'basis'
             }},
             themeVariables: {{
                 'primaryColor': '#ffffff',
                 'edgeLabelBackground':'#ffffff',
-                'tertiaryColor': '#f8f9fa'
+                'tertiaryColor': '#f8f9fa',
+                'fontSize': '14px'
             }}
         }});
     </script>
     """
-    components.html(html, height=800, scrolling=True)
+    components.html(html, height=1000, scrolling=True)
 
 render_mermaid(mermaid_code)
-
-st.caption("✨ Optimized for Landscape view. Use the scrollbar if viewing on a narrow screen.")
