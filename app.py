@@ -3,9 +3,9 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="MTI Vertical Pillars", layout="wide")
 
-st.markdown("### 📋 Full MTI Pathway – Vertical Pillar Model")
+st.markdown("### 📋 Full MTI Pathway – High-Fidelity Pillar Model")
 
-# Using 'graph LR' for the overall layout, but strict 'subgraph' verticality
+# Using 'flowchart LR' but forcing verticality with '---' invisible links if needed
 mermaid_code = """
 flowchart LR
     subgraph P1 ["1. Strategic & <br/> Programme Design"]
@@ -43,23 +43,22 @@ flowchart LR
         E3 --> E4([End])
     end
 
-    %% Bridges between the pillars
+    %% Bridges between the pillars - using 'stepAfter' style
     S4 --> G1
     G3 --> R1
     R3 --> T1
     T3 --> E1
 
-    %% Styling Classes for High-Fidelity Colors
+    %% Styling Classes for Colors
     classDef startEnd fill:#d4edda,stroke:#28a745,stroke-width:2px;
-    classDef headerNode fill:#1a3a5f,color:#fff,font-weight:bold,stroke:#1a3a5f;
+    classDef headerNode fill:#1a3a5f,color:#fff,font-weight:bold;
     classDef subNode fill:#e9ecef,stroke:#adb5bd,color:#333;
     
-    %% Applying Classes
     class S1,E4 startEnd;
     class S2,G1,R1,T1,E1 headerNode;
     class S3,S3a,S3b,S3c,S4,G2,R2,R3,T2,E2,E3 subNode;
     
-    %% Coloring the subgraph headers
+    %% Backgrounds for columns
     style P1 fill:#f8f9fa,stroke:#1a3a5f
     style P2 fill:#ffffff,stroke:#1a3a5f
     style P3 fill:#f8f9fa,stroke:#1a3a5f
@@ -68,9 +67,10 @@ flowchart LR
 """
 
 def render_mermaid(code):
+    # The key is 'min-width' on the internal div to force landscape orientation
     html = f"""
-    <div style="display: flex; justify-content: center; width: 100%;">
-        <div class="mermaid" style="min-width: 1400px; padding: 20px; background: white;">
+    <div style="width: 100%; overflow-x: auto;">
+        <div class="mermaid" style="min-width: 1600px; display: flex; justify-content: center;">
             {code}
         </div>
     </div>
@@ -83,8 +83,8 @@ def render_mermaid(code):
                 useMaxWidth: false, 
                 htmlLabels: true, 
                 curve: 'stepAfter',
-                rankSpacing: 50,
-                nodeSpacing: 10
+                rankSpacing: 80,
+                nodeSpacing: 20
             }}
         }});
     </script>
