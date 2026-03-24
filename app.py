@@ -1,77 +1,86 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="MTI Pathway Vertical", layout="wide")
+st.set_page_config(page_title="MTI Pathway Pro", layout="wide")
 
-st.title("MTI Pathway – Vertical Visual Flow")
-st.write("Trust-Level Infection Sciences Model")
+st.title("Full MTI Pathway – Visual Flow")
+st.write("Infection Sciences Model (High-Fidelity Re-creation)")
 
-# 'graph TD' creates the Vertical Flow
+# Mermaid Code with custom class styles for colors
 mermaid_code = """
 graph TD
-    subgraph "1. Strategic Intent & Programme Design"
-        S1([Start]) --> S2[1.1 Identify Workforce Gap / Training Opportunity]
-        S2 --> S3[1.2 Align with Trust Strategy]
-        S3 --> S4[1.3 Clinical Director & Med Ed Approval]
+    %% Stage 1
+    subgraph "1. Strategic & Programme Design"
+        S1([Start]) --> S2[Strategic Intent]
+        S2 --> S3[Programme Design]
+        S3 --> S3a[Role Description]
+        S3 --> S3b[Educational Objectives]
+        S3 --> S3c[Duration / Hands-on Exposure]
+        S3c --> S4[Clinical Director Approval]
     end
 
-    subgraph "2. Governance & Design"
-        S4 --> G1[2.1 Define MTI Posts<br/>- Role Description<br/>- Educational Objectives]
-        G1 --> G2[2.2 Confirm Training Value<br/>- Lab Exposure<br/>- Clinical Micro]
-        G2 --> G3[2.3 Identify Supervisors]
+    %% Stage 2
+    subgraph "2. Governance & Candidate Sourcing"
+        S4 --> G1[Governance:<br/>Stakeholders / HR / Finance]
+        G1 --> G2[/Trust Approval/]
+        G2 --> G3[Governance & Candidate Sourcing:<br/>Identify Partner / RC Sponsor]
     end
 
-    subgraph "3. Approvals & Sourcing"
-        G3 --> A1[3.1 Engage Stakeholders<br/>- HR / Finance / Med Ed]
-        A1 --> A2[3.2 Royal College Sponsorship<br/>- RCPath]
-        A2 --> A3[/3.3 Trust Post Approval/]
+    %% Stage 3
+    subgraph "3. Pre-Arrival & Induction"
+        G3 --> P1[GMC Registration Process]
+        P1 --> P2[Visa Sponsorship Tier 5]
+        P2 --> P3[Pre-arrival Engagement:<br/>Welcome Pack / Lab System]
     end
 
-    subgraph "4. Candidate Pipeline & Pre-Arrival"
-        A3 --> P1[4.1 Identify International Partner]
-        P1 --> P2[4.2 Candidate Interview & Shortlisting]
-        P2 --> P3[4.3 GMC Registration & Visa Tier 5]
+    %% Stage 4
+    subgraph "4. Training & Monitoring"
+        P3 --> T1[Structured Training Programme:<br/>Microbiology / Lab / MDT]
+        T1 --> T2[Regular Supervision:<br/>ES/CS Meetings / Portfolio]
+        T2 --> T3{Decision Points}
     end
 
-    subgraph "5. Induction & Training"
-        P3 --> I1[5.1 Trust & Dept Induction]
-        I1 --> I2[5.2 Supernumerary Period / Shadowing]
-        I2 --> I3[5.3 Structured Training & Supervision]
+    %% Stage 5
+    subgraph "5. Programme Exit & Improvement"
+        T3 --> E1[Final Review & Sign-off]
+        E1 --> E2[Return to Home Country / Career Guidance]
+        E2 --> E3[Capture Outcomes & Feedback]
+        E3 --> E4([End])
     end
 
-    subgraph "6. Quality & Exit"
-        I3 --> Q1[6.1 3/6/12 Month Reviews]
-        Q1 --> Q2[6.2 Final Sign-off & Exit Planning]
-        Q2 --> Q3([End: Continuous Improvement])
-    end
+    %% Styling Classes (To match your image colors)
+    classDef startEnd fill:#d4edda,stroke:#28a745,stroke-width:2px;
+    classDef headerNode fill:#1a3a5f,color:#fff,font-weight:bold,stroke:#1a3a5f;
+    classDef subNode fill:#e9ecef,stroke:#adb5bd,color:#333;
+    classDef actionNode fill:#34495e,color:#fff,stroke:#2c3e50;
 
-    %% Styling
-    style S1 fill:#d4edda,stroke:#333
-    style Q3 fill:#d4edda,stroke:#333
-    style A3 fill:#fff,stroke:#333,stroke-width:2px
-    style T3 fill:#3498db,color:#fff
-    
-    %% Color coding the stages
-    classDef stage1 fill:#f9f9f9,stroke:#333;
-    classDef stage2 fill:#ffffff,stroke:#333;
-    class S1,S2,S3,S4 stage1;
-    class G1,G2,G3 stage2;
+    %% Applying Classes
+    class S1,E4 startEnd;
+    class S2,G1,G3,P3,T1,E1 headerNode;
+    class S3,S3a,S3b,S3c,S4,G2,P1,P2,T2,E2,E3 subNode;
 """
 
 def render_mermaid(code):
     html = f"""
-    <div class="mermaid" style="display: flex; justify-content: center;">
+    <div class="mermaid" style="display: flex; justify-content: center; background-color: #ffffff; padding: 20px;">
         {code}
     </div>
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({{ 
             startOnLoad: true, 
-            theme: 'neutral',
-            flowchart: {{ useMaxWidth: true, htmlLabels: true, curve: 'basis' }}
+            theme: 'base',
+            themeVariables: {{
+                'primaryColor': '#ffffff',
+                'primaryTextColor': '#333',
+                'primaryBorderColor': '#1a3a5f',
+                'lineColor': '#1a3a5f',
+                'secondaryColor': '#f8f9fa',
+                'tertiaryColor': '#ffffff'
+            }}
         }});
     </script>
     """
-    components.html(html, height=1200, scrolling=True)
+    components.html(html, height=1500, scrolling=True)
 
 render_mermaid(mermaid_code)
