@@ -1,56 +1,49 @@
 import streamlit as st
-import graphviz
+import sys
+import subprocess
 
-# Set page config
+# Safety Check: Let's see if graphviz is actually installed
+try:
+    import graphviz
+except ImportError:
+    st.error("Python module 'graphviz' not found. Please ensure it is in requirements.txt")
+    st.stop()
+
 st.set_page_config(page_title="MTI Pathway Visualizer", layout="wide")
 
 st.title("MTI Pathway – Trust-Level Visual Flow")
-st.subheader("Infection Sciences Model")
 
-# Define the flowchart logic
 def generate_flowchart():
-    dot = graphviz.Digraph(comment='MTI Pathway')
+    # We use 'dot' engine explicitly
+    dot = graphviz.Digraph(comment='MTI Pathway', engine='dot')
     dot.attr(rankdir='TB', size='10')
-    dot.attr('node', shape='rectangle', style='filled', color='lightblue', fontname='Arial')
+    dot.attr('node', shape='rectangle', style='filled', color='#E1F5FE', fontname='Arial', penwidth='2')
+    
+    # Process Steps
+    steps = [
+        ('1', '1. Strategic Intent & Service Need'),
+        ('2', '2. Programme Design'),
+        ('3', '3. Governance & Approvals'),
+        ('4', '4. International Candidate Pipeline'),
+        ('5', '5. Pre-Arrival Preparation'),
+        ('6', '6. Induction & Safe Transition'),
+        ('7', '7. Training Delivery & Support'),
+        ('8', '8. Monitoring & Quality Assurance'),
+        ('9', '9. Programme Completion & Exit'),
+        ('10', '10. Continuous Improvement Loop')
+    ]
 
-    # 1. Strategic Intent
-    dot.node('1', '1. Strategic Intent & Service Need\n- Identify Gap\n- Align with Strategy\n- Agreement in Principle')
+    for id, label in steps:
+        dot.node(id, label)
 
-    # 2. Programme Design
-    dot.node('2', '2. Programme Design\n- Define Post (12-24m)\n- Confirm Training Value\n- Identify Supervisors')
-
-    # 3. Governance
-    dot.node('3', '3. Governance & Approvals\n- Engage Stakeholders\n- Royal College Sponsorship\n- Trust Approval')
-
-    # 4. Pipeline
-    dot.node('4', '4. International Candidate Pipeline\n- Identify Partner\n- Candidate EOI\n- Shortlisting & Interview')
-
-    # 5. Pre-Arrival
-    dot.node('5', '5. Pre-Arrival Preparation\n- GMC Registration\n- Visa Sponsorship (Tier 5)\n- Pre-arrival Engagement')
-
-    # 6. Induction
-    dot.node('6', '6. Induction & Safe Transition\n- Trust & Dept Induction\n- Supernumerary Period\n- Clinical Integration')
-
-    # 7. Training
-    dot.node('7', '7. Training Delivery & Support\n- Structured Programme\n- Regular Supervision\n- Teaching & QI')
-
-    # 8. Monitoring
-    dot.node('8', '8. Monitoring & Quality Assurance\n- 3/6/12 Month Reviews\n- Feedback Collection\n- Address Issues Early')
-
-    # 9. Completion
-    dot.node('9', '9. Programme Completion & Exit\n- Final Review & Sign-off\n- Return to Home Country\n- Capture Outcomes')
-
-    # 10. Improvement
-    dot.node('10', '10. Continuous Improvement Loop\n- Evaluate & Refine\n- Expand Capacity')
-
-    # Define Connections
-    edges = [('1', '2'), ('2', '3'), ('3', '4'), ('4', '5'), ('5', '6'), 
-             ('6', '7'), ('7', '8'), ('8', '9'), ('9', '10'), ('10', '1')]
-    dot.edges(edges)
-
+    # Simple sequential flow
+    for i in range(1, 10):
+        dot.edge(str(i), str(i+1))
+        
     return dot
 
-# Display the chart
-st.graphviz_chart(generate_flowchart())
-
-st.info("This flowchart represents the end-to-end lifecycle of the MTI pathway within the Trust.")
+try:
+    st.graphviz_chart(generate_flowchart())
+except Exception as e:
+    st.error(f"The Graphviz binary is missing or not linked. Error: {e}")
+    st.info("Since you have packages.txt, try deleting the app on Streamlit Cloud and redeploying from scratch to clear the cache.")
